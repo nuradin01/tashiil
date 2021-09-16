@@ -3,7 +3,7 @@ const Expense = require('../models/expenseModel')
 
 // @desc    Fetch all Expenses
 // @route   GET /api/expenses
-// @access  Public
+// @access  private
 exports.getExpenses = asyncHandler(async (req, res) => {
 
     const expenses = await Expense.find()
@@ -11,6 +11,19 @@ exports.getExpenses = asyncHandler(async (req, res) => {
     res.status(200).json(expenses)
 })
 
+// @desc            Get single expense
+// @route           GET /api/expenses/:id
+// @access          Private
+exports.getExpense = asyncHandler(async (req, res, next) => {
+  const expense = await Expense.findById(req.params.id);
+
+  // if the format of the ID is correct but not in database
+  if (!expense) {
+    res.status(404)
+    throw new Error('Expense not found')
+  }
+  res.status(200).json(expense);
+});
 
 // @desc            Create expense
 // @route           POST /api/bootcamps
