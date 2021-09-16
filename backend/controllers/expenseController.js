@@ -36,3 +36,18 @@ exports.updateExpense = asyncHandler(async (req, res, next) => {
   expense = await Expense.findByIdAndUpdate(req.params.id, req.body);
   res.status(200).json( expense );
 });
+
+// @desc            Delete expense
+// @route           DELETE /api/expense/:id
+// @access          Private
+exports.deleteExpense = asyncHandler(async (req, res, next) => {
+  const expense = await Expense.findById(req.params.id);
+
+  if (!expense) {
+    res.status(404)
+    throw new Error('Expense not found')
+  }
+
+  expense.remove();
+  res.status(200).json({message: 'expense removed'});
+});
